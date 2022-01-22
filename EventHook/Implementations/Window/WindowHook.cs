@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
-using System.IO;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using EventHook.Abstractions;
 
 namespace EventHook.Implementations.Window
 {
     public partial class WindowHook : HookWindow
-    {
-        public event EventHandler<(WindowParameters from, WindowParameters to)> Changed;
+{
+        public event EventHandler<WindowParameters> Changed;
 
         private static WinEventDelegate ForegroundWindowChanged = null;
         private delegate void WinEventDelegate(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime);
@@ -18,11 +18,9 @@ namespace EventHook.Implementations.Window
         private const uint WINEVENT_OUTOFCONTEXT = 0;
         private const uint EVENT_SYSTEM_FOREGROUND = 3;
 
-        private WindowParameters lastWindowParameters;
-
         public WindowHook()
         {
-            lastWindowParameters = CreateWindowParemeters(GetForegroundWindow());
+            Changed?.Invoke(this,CreateWindowParemeters(GetForegroundWindow()));
 
             ForegroundWindowChanged = new WinEventDelegate(WinEventProc);
             IntPtr m_hhook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND, EVENT_SYSTEM_FOREGROUND, IntPtr.Zero, ForegroundWindowChanged, 0, 0, WINEVENT_OUTOFCONTEXT);
@@ -43,8 +41,7 @@ namespace EventHook.Implementations.Window
         private void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime) //STATIC
         {
             var windowParameters = CreateWindowParemeters(hwnd);
-            Changed?.Invoke(this, (lastWindowParameters, windowParameters));
-            lastWindowParameters = windowParameters;
+            Changed?.Invoke(this,windowParameters);
         }
 
         private WindowParameters CreateWindowParemeters(IntPtr hwnd)

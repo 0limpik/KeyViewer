@@ -4,7 +4,7 @@ namespace EventHook.Abstractions
 {
     public interface HookWindow
     {
-        event EventHandler<(WindowParameters from, WindowParameters to)> Changed;
+        event EventHandler<WindowParameters> Changed;
     }
 
     public class WindowParameters
@@ -18,10 +18,5 @@ namespace EventHook.Abstractions
         public string MainWindowTitle { get; set; }
 
         public DateTime StartTime { get; set; }
-
-        public bool Equals(WindowParameters windowParameters)
-        {
-            return FilePath == windowParameters.FilePath;
-        }
     }
 }

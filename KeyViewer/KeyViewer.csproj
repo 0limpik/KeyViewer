@@ -57,12 +57,28 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Extensions\GradientStopCollectionExtensions.cs" />
+    <Compile Include="Extensions\KeysEnumExtensions.cs" />
     <Compile Include="Model\Programs\ProgramSettings.cs" />
+    <Compile Include="ViewModel\Keys\KeyItem.cs" />
+    <Compile Include="ViewModel\Keys\KeyListViewModel.cs" />
     <Compile Include="ViewModel\ProgramViewModel.cs" />
+    <Compile Include="ViewModel\SettingsClass.cs" />
+    <Compile Include="View\Converters\BaseTypeConverters.cs" />
+    <Compile Include="View\Converters\KeysConverters.cs" />
+    <Compile Include="View\Converters\TimeConverters.cs" />
+    <Compile Include="View\Converters\UserContlolConverters.cs" />
+    <Compile Include="View\Keys\KeyListView.xaml.cs">
+      <DependentUpon>KeyListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ProgramSettingsView.xaml.cs">
       <DependentUpon>ProgramSettingsView.xaml</DependentUpon>
     </Compile>
-    <Page Include="View\KeyView.xaml">
+    <Page Include="View\Keys\KeyListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\KeyViewerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -74,10 +90,9 @@
     <Compile Include="Services\Implementations\JsonRepository.cs" />
     <Compile Include="Services\KeyInfoRepository.cs" />
     <Compile Include="Services\ProgramsRepository.cs" />
-    <Compile Include="ViewModel\KeyViewModel.cs" />
-    <Compile Include="View\Converters.cs" />
-    <Compile Include="View\KeyView.xaml.cs">
-      <DependentUpon>KeyView.xaml</DependentUpon>
+    <Compile Include="ViewModel\KeyViewerViewModel.cs" />
+    <Compile Include="View\KeyViewerView.xaml.cs">
+      <DependentUpon>KeyViewerView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\ProgramSettingsView.xaml">
@@ -119,6 +134,10 @@
     <ProjectReference Include="..\EventHook\EventHook.csproj">
       <Project>{2038B3B7-EAD1-45D7-9B7D-A2868C0C90A9}</Project>
       <Name>EventHook</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LogSystem\LogSystem.csproj">
+      <Project>{D448E272-04C3-4CB5-B3A0-209F077722AF}</Project>
+      <Name>LogSystem</Name>
     </ProjectReference>
     <ProjectReference Include="..\WPFMVVM\WPFMVVM.csproj">
       <Project>{79B1E806-E6F9-4C90-819D-EBDE36D14CDB}</Project>

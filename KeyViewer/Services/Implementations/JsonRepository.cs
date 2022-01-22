@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
 using KeyViewer.Services.Abstraction;
+using LogSystem;
 using Newtonsoft.Json;
 
 namespace KeyViewer.Services.Implementations
 {
     public abstract class JsonRepository<T> : IRepository<T>
     {
-        public List<T> Repository = new List<T>();
+        public event Action Update;
+
+        public List<T> Repository { get; set; } = new List<T>();
 
         public string RepositoryName { get; protected set; }
         public string RepositoryDirectory { get; protected set; }
@@ -22,101 +22,58 @@ namespace KeyViewer.Services.Implementations
             this.RepositoryName = RepositoryName;
             this.RepositoryDirectory = RepositoryDirectory;
 
-            Load();
-
-            if (InDesignMode()) return;
-
-            InitAutoSave();
-        }
-
-        async void InitAutoSave()
-        {
-            while (true)
+            try
             {
-                await Task.Delay(5000);
-                Save();
+                Load();
             }
-        }
-
-        public bool AddOrUpdate(Func<T, bool> predicate, T entity)
-        {
-            if (!Repository.Any(predicate))
+            catch
             {
-                Repository.Add(entity);
-                return true;
+                InitFileSystem();
+                Init();
             }
-            else
-            {
-                var value = Repository.First(predicate);
-
-                value = entity;
-
-                return false;
-            }
-        }
-
-        public void Add(T entity)
-        {
-            Repository.Add(entity);
-            Save();
         }
 
         public abstract void Init();
 
         public void Load()
         {
-            if (InDesignMode())
+            var loadRepository = JsonConvert.DeserializeObject<List<T>>(File.ReadAllText(RepositoryPath));
+
+            if (loadRepository == null)
             {
-                Init();
-                return;
+                var backupPath = $"{RepositoryDirectory}\\Error_{DateTime.Now:MM.dd_hh:mm}_{RepositoryName}";
+                File.Move(RepositoryPath, backupPath);
+                Logger.Instance.WriteError($"Load failed. Backup created: {backupPath}");
+                throw new Exception("Error when load");
             }
 
-            Directory.CreateDirectory(RepositoryDirectory);
-
-            if (File.Exists(RepositoryPath))
-            {
-                try
-                {
-                    var loadRepository = JsonConvert.DeserializeObject<List<T>>(File.ReadAllText(RepositoryPath));
-                    Repository = loadRepository ?? throw new Exception("Ошибка при загрузке");
-                    return;
-                }
-                catch (Exception ex)
-                {
-                    File.Move(RepositoryPath, $"{RepositoryDirectory}\\Error_{RepositoryName}");
-                }
-            }
-            else
-            {
-                File.Create(RepositoryPath).Dispose();
-            }
-
-            Init();
-
-            Save();
-        }
-
-        public static bool InDesignMode()
-        {
-            return !(Application.Current is App);
+            Repository = loadRepository;
         }
 
         public void Save()
         {
+            Update?.Invoke();
             try
             {
                 File.WriteAllText(RepositoryPath, JsonConvert.SerializeObject(Repository, Formatting.Indented));
             }
-            catch
+            catch (Exception ex)
             {
-
+                Logger.Instance.WriteWarning($"Save failed. {ex.GetType()}: {ex.Message}");
             }
         }
 
-        private async void FileChange(object sender, FileSystemEventArgs e)
+        private void InitFileSystem()
         {
-            await Task.Delay(100);
-            Load();
+            if (!Directory.Exists(RepositoryDirectory))
+            {
+                Directory.CreateDirectory(RepositoryDirectory);
+            }
+
+            if (!File.Exists(RepositoryPath))
+            {
+                File.Create(RepositoryPath).Dispose();
+            }
         }
     }
 }

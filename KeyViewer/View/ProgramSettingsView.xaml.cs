@@ -16,7 +16,7 @@ namespace KeyViewer.View
             InitializeComponent();
         }
 
-        public void Init(KeyViewModel viewModel)
+        public void Init(KeyViewerViewModel viewModel)
         {
             ViewModel.keyViewModel = viewModel;
         }
@@ -24,6 +24,11 @@ namespace KeyViewer.View
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             throw new Exception("TEst");
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }

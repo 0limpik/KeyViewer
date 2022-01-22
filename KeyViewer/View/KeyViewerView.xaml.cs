@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
@@ -8,20 +9,20 @@ using KeyViewer.ViewModel;
 
 namespace KeyViewer.View
 {
-    public partial class KeyView : Window
+    public partial class KeyViewerView : Window
     {
-        private KeyViewModel ViewModel => (KeyViewModel)this.DataContext;
+        private KeyViewerViewModel ViewModel => (KeyViewerViewModel)this.DataContext;
         private DispatcherTimer timer;
-        public KeyView()
+        public KeyViewerView()
         {
             InitializeComponent();
 
             //this.Left = 300;
             //this.Top = SystemParameters.PrimaryScreenHeight - this.Height;
 
-            var context = DataContext as KeyViewModel;
-            context.AddKey = (k) => KeyContainer.Items.Add(k);
-            context.RemoveKey = (k) => KeyContainer.Items.Remove(k);
+            var context = DataContext as KeyViewerViewModel;
+            //context.AddKey = (k) => KeyContainer.Items.Add(k);
+            //context.RemoveKey = (k) => KeyContainer.Items.Remove(k);
 
             timer = new DispatcherTimer
             {
@@ -45,12 +46,12 @@ namespace KeyViewer.View
             base.OnSourceInitialized(e);
             var hwnd = new WindowInteropHelper(this).Handle;
             WindowsServices.SetWindowExTransparent(hwnd);
+            WindowsServices.SetWindowExHidenInAltTab(hwnd);
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            var context = DataContext as KeyViewModel;
-            context.Exit();
+            ViewModel.Exit();
         }
     }
 
@@ -60,8 +61,11 @@ namespace KeyViewer.View
         const int WS_EX_APPWINDOW = 0x00040000;
         const int WS_EX_TOOLWINDOW = 0x00000080;
         internal const int WS_EX_TOPMOST = 0x00000008;
+        private const int WS_EX_NOACTIVATE = 0x08000000;
 
         const int GWL_EX_STYLE = -20;
+
+
 
         [DllImport("user32.dll")]
         static extern int GetWindowLong(IntPtr hwnd, int index);
@@ -78,7 +82,7 @@ namespace KeyViewer.View
         public static void SetWindowExHidenInAltTab(IntPtr hwnd)
         {
             //Performing some magic to hide the form from Alt+Tab
-            SetWindowLong(hwnd, GWL_EX_STYLE, (GetWindowLong(hwnd, GWL_EX_STYLE) | WS_EX_TOOLWINDOW) & ~WS_EX_APPWINDOW);
+            SetWindowLong(hwnd, GWL_EX_STYLE, (GetWindowLong(hwnd, GWL_EX_STYLE) | WS_EX_TOOLWINDOW) & ~WS_EX_APPWINDOW & ~WS_EX_NOACTIVATE);
         }
 
         private const int RetrySetTopMostDelay = 200;

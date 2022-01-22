@@ -2,26 +2,26 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using KeyViewer.Model.Programs;
 using KeyViewer.Services;
 using PropertyChanged;
 using WPFMVVM.ViewModel.Abstractions;
-using Point = KeyViewer.Model.Programs.Point;
 
 namespace KeyViewer.ViewModel
 {
     public class ProgramViewModel : AViewModel
     {
-        public KeyViewModel keyViewModel;
+        public KeyViewerViewModel keyViewModel;
 
         public ICollectionView Settings => _Settings.View;
         private CollectionViewSource _Settings = new CollectionViewSource();
 
-        [AlsoNotifyFor(nameof(SelectedSettings))]
+        [AlsoNotifyFor(nameof(IsNotNull), nameof(SelectedSettings))]
         public ProgramSettings SelectedSettings { get; set; }
+
+        public bool IsNotNull => SelectedSettings != null;
 
         [AlsoNotifyFor(nameof(ProgramFilter))]
         public string ProgramFilter
@@ -51,21 +51,13 @@ namespace KeyViewer.ViewModel
             return false;
         }
 
-        public string DisplayName => SelectedSettings?.DisplayName;
-        [AlsoNotifyFor(nameof(DisplayNameSource), nameof(DisplayName))] public DisplayNameSource DisplayNameSource { get => SelectedSettings.DisplayNameSource; set => SelectedSettings.DisplayNameSource = value; }
-        public IEnumerable<DisplayNameSource> ReportTemplateValues
-        {
-            get { return Enum.GetValues(typeof(DisplayNameSource)).Cast<DisplayNameSource>(); }
-        }
-
-        [AlsoNotifyFor(nameof(Alighument))] public Alighument Alighument { get => SelectedSettings.Alight; set => SelectedSettings.Alight = value; }
         public ICommand SelectAlightCommand { get; }
 
         private void SelectAlight(object parameter)
         {
             if (parameter is Alighument alight)
             {
-                Alighument = alight;
+                if (SelectedSettings != null) SelectedSettings.Alight = alight;
             }
         }
 
@@ -73,18 +65,13 @@ namespace KeyViewer.ViewModel
         {
             if (parameter is Alighument alight)
             {
-                return Alighument != alight;
+                if (SelectedSettings != null) return SelectedSettings.Alight != alight;
             }
             return false;
         }
 
-        [AlsoNotifyFor(nameof(AlightHorizontal))] public int AlightHorizontal { get => (int)SelectedSettings.AlightPosition.X; set => SelectedSettings.AlightPosition.X = value; }
-        [AlsoNotifyFor(nameof(AlightVertical))] public int AlightVertical { get => (int)SelectedSettings.AlightPosition.Y; set => SelectedSettings.AlightPosition.Y = value; }
-
-        [AlsoNotifyFor(nameof(MaxAlightHorizontal))] public int MaxAlightHorizontal => (int)(SettingsClass.ScreenSizeX - SettingsClass.SizeX);
-        [AlsoNotifyFor(nameof(MaxAlightVertical))] public int MaxAlightVertical => (int)(SettingsClass.ScreenSizeY - SettingsClass.SizeY);
-
-        [AlsoNotifyFor(nameof(IsVisible))] public bool IsVisible { get => SelectedSettings.IsVisible; set => SelectedSettings.IsVisible = value; }
+        public int MaxAlightHorizontal => (int)(SettingsClass.ScreenSizeX - SettingsClass.SizeX);
+        public int MaxAlightVertical => (int)(SettingsClass.ScreenSizeY - SettingsClass.SizeY);
 
         private ProgramsRepository programsRepository = ProgramsRepository.Instanse;
 
@@ -97,12 +84,18 @@ namespace KeyViewer.ViewModel
             Settings.Filter = ProgramFilterPredicate;
             Settings.SortDescriptions.Add(new SortDescription(nameof(ProgramSettings.InGameAllTime), ListSortDirection.Descending));
             PropertyChanged += ProgramViewModel_PropertyChanged;
+            programsRepository.Update += () => Settings.Refresh();
             Settings.Refresh();
         }
 
         private void ProgramViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             programsRepository?.Save();
+        }
+
+        public IEnumerable<DisplayNameSource> ReportTemplateValues
+        {
+            get { return Enum.GetValues(typeof(DisplayNameSource)).Cast<DisplayNameSource>(); }
         }
     }
 }
