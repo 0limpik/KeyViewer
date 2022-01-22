@@ -1,0 +1,45 @@
+﻿<UserControl x:Class="AutoSettings.View.SettingsList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AutoSettings.View"
+             xmlns:vm="clr-namespace:AutoSettings.ViewModel"
+             xmlns:m="clr-namespace:AutoSettings.Model"
+             xmlns:mt="clr-namespace:AutoSettings.Model.SettingTypes"
+             mc:Ignorable="d">
+    <UserControl.DataContext>
+        <vm:SettingsViewModel/>
+    </UserControl.DataContext>
+    <Grid Margin="25">
+        <ListView ItemsSource="{Binding Settings}"/>
+    </Grid>
+    <UserControl.Resources>
+        <Style x:Key="TextBlockStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect ShadowDepth="0" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <DataTemplate DataType="{x:Type mt:BoolSetting}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Name}" ToolTip="{Binding Description}" Width="150"/>
+                <CheckBox IsChecked="{Binding Value}"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type mt:IntSetting}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Name}" ToolTip="{Binding Description}" Width="150"/>
+                <TextBox Text="{Binding Value}" MinWidth="150"/>
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type mt:StringSetting}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Name}" ToolTip="{Binding Description}" Width="150"/>
+                <TextBox Text="{Binding Value}" MinWidth="150"/>
+            </StackPanel>
+        </DataTemplate>
+    </UserControl.Resources>
+</UserControl>
