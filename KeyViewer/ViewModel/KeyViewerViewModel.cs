@@ -11,7 +11,6 @@ using KeyViewer.Services;
 using KeyViewer.ViewModel.Keys;
 using PropertyChanged;
 using WPFMVVM.ViewModel.Abstractions;
-using Point = KeyViewer.Model.Programs.Point;
 
 namespace KeyViewer.ViewModel
 {
@@ -30,32 +29,17 @@ namespace KeyViewer.ViewModel
         public string SystemTime => $"{DateTime.Now:h:mm:ss}";
         public string SystemDate => $"{DateTime.Now:MMM/dd tt}";
 
-        private Point GetPoint(Point point, Alighument alighument)
-        {
-            switch (alighument)
-            {
-                case Alighument.LeftTop:
-                    return new Point() { X = point.X, Y = point.Y };
-                case Alighument.LeftBottom:
-                    return new Point() { X = point.X, Y = SettingsClass.ScreenSizeY - SettingsClass.SizeY - point.Y };
-                case Alighument.RightTop:
-                    return new Point() { X = SettingsClass.ScreenSizeX - SettingsClass.SizeX - point.X, Y = point.Y };
-                case Alighument.RightBottom:
-                    return new Point() { X = SettingsClass.ScreenSizeX - SettingsClass.SizeX - point.X, Y = SettingsClass.ScreenSizeY - SettingsClass.SizeY - point.Y };
-                default:
-                    return new Point();
-            }
-        }
         public KeyListViewModel keyListViewModel { get; set; } = new KeyListViewModel();
 
         private WindowHook windowHook = new WindowHook();
         private ProgramsRepository programsRepository = ProgramsRepository.Instanse;
+        private DeletedProgramsRepository deletedProgramsRepository = DeletedProgramsRepository.Instanse;
 
         private KeyboardHook keyboardHook = new KeyboardHook();
-        private KeyInfoRepository<KeyboardKeys> keyboardRepository = new KeyInfoRepository<KeyboardKeys>("KeyboardRepository.json");
+        private KeyboardKeysRepository keyboardRepository = KeyboardKeysRepository.Instanse;
 
         private MouseHook mouseHook = new MouseHook();
-        private KeyInfoRepository<MouseKeys> mouseRepository = new KeyInfoRepository<MouseKeys>("MouseRepository.json");
+        private MouseKeysRepository mouseRepository = MouseKeysRepository.Instanse;
 
         private DispatcherTimer timer;
         private DateTime LastWindowChanged = DateTime.Now;
@@ -97,14 +81,19 @@ namespace KeyViewer.ViewModel
 
         private void WindowUpdate(object sender, WindowParameters window)
         {
+            System.Diagnostics.Trace.WriteLine(window.FilePath);
+            if (deletedProgramsRepository.Repository.Contains(window.FilePath))
+            {
+                CurrentWindow = new ProgramSettings { IsVisible = false };
+                return;
+            };
+
             var programSettings = programsRepository.Repository.FirstOrDefault(x => CompareWindow(x, window));
 
             if (programSettings == null)
             {
-                programSettings = new ProgramSettings()
-                {
-                    Window = window
-                };
+                programSettings = programsRepository.GetDefault();
+                programSettings.Window = window;
                 programsRepository.Repository.Add(programSettings);
             }
 
@@ -115,7 +104,7 @@ namespace KeyViewer.ViewModel
 
             if (CurrentWindow.IsVisible)
             {
-                var point = GetPoint(CurrentWindow.AlightPosition, CurrentWindow.Alight);
+                var point = SettingsClass.GetPoint(CurrentWindow.AlightPosition, CurrentWindow.Alight);
                 Left = point.X;
                 Top = point.Y;
             }
@@ -165,24 +154,6 @@ namespace KeyViewer.ViewModel
                 return true;
 
             return false;
-        }
-    }
-
-    public static class EnumHelper
-    {
-        /// <summary>
-        /// Gets an attribute on an enum field value
-        /// </summary>
-        /// <typeparam name="T">The type of the attribute you want to retrieve</typeparam>
-        /// <param name="enumVal">The enum value</param>
-        /// <returns>The attribute of type T that exists on the enum value</returns>
-        /// <example><![CDATA[string desc = myEnumVariable.GetAttributeOfType<DescriptionAttribute>().Description;]]></example>
-        public static T GetAttributeOfType<T>(this Enum enumVal) where T : System.Attribute
-        {
-            var type = enumVal.GetType();
-            var memInfo = type.GetMember(enumVal.ToString());
-            var attributes = memInfo[0].GetCustomAttributes(typeof(T), false);
-            return (attributes.Length > 0) ? (T)attributes[0] : null;
         }
     }
 }

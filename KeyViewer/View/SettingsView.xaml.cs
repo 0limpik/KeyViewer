@@ -7,11 +7,11 @@ namespace KeyViewer.View
     /// <summary>
     /// Interaction logic for ProgramSettings.xaml
     /// </summary>
-    public partial class ProgramSettingsView : Window
+    public partial class SettingsView : Window
     {
-        private ProgramViewModel ViewModel => (ProgramViewModel)this.DataContext;
+        private SettingsViewModel ViewModel => (SettingsViewModel)this.DataContext;
 
-        public ProgramSettingsView()
+        public SettingsView()
         {
             InitializeComponent();
         }

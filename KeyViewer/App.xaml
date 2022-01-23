@@ -8,6 +8,17 @@
     StartupUri="View/KeyViewerView.xaml">
     <Application.Resources>
         <conv:VisibleConverter x:Key="visibleConverter" />
+        <conv:TimeCutConverter x:Key="timeCutConverter" />
+        <conv:MaxTextLenghtConverter x:Key="maxTextLenght" />
+        <conv:EnumDescriptionConverter x:Key="enumDescriptionConverter" />
+        <conv:MathRoundConverter x:Key="mathRoundConverter" />
+        <conv:TimeToNowCutConverter x:Key="timeToNowCutConverter" />
+        <conv:TimeShortCutConverter x:Key="timeShortCutConverter" />
+        <conv:MarginConverter x:Key="marginConverter" />
+        <conv:IsFirstItem x:Key="isFirstItem" />
+        <conv:IsActiveChanged x:Key="isActiveChanged" />
+        <conv:MaxTextLenghtConverter x:Key="MaxTextLenght" />
+        <conv:EqualsVisibleConverter x:Key="equalsVisibleConverter" />
         <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
             <Setter Property="OverridesDefaultStyle" Value="False" />
             <Setter Property="Foreground" Value="White" />
@@ -26,12 +37,60 @@
             <Setter Property="Background" Value="#606060" />
             <Setter Property="Foreground" Value="White" />
         </Style>
+        <Style BasedOn="{StaticResource {x:Type Button}}" TargetType="Button">
+            <Setter Property="Background" Value="#606060" />
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="Padding" Value="3" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border
+                            Margin="{TemplateBinding Margin}"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="Black"
+                            BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#808080" />
+                </Trigger>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Background" Value="#202020" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
         <Style
             x:Key="DefButton"
             BasedOn="{StaticResource {x:Type Button}}"
             TargetType="Button">
             <Setter Property="Background" Value="#606060" />
+            <Setter Property="Margin" Value="1" />
+            <Setter Property="Padding" Value="3" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border
+                            Margin="{TemplateBinding Margin}"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="Black"
+                            BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
             <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#808080" />
+                </Trigger>
                 <Trigger Property="IsEnabled" Value="False">
                     <Setter Property="Background" Value="#202020" />
                 </Trigger>
@@ -47,6 +106,34 @@
                             Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"
                             StrokeDashArray="1 2"
                             StrokeThickness="1" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="{x:Type TabItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TabItem}">
+                        <Border
+                            x:Name="contentBorder"
+                            Margin="1"
+                            Padding="3"
+                            BorderBrush="#b0b0b0"
+                            BorderThickness="1,1,1,0"
+                            CornerRadius="3,0,3,0">
+                            <ContentPresenter
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                ContentSource="Header" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="contentBorder" Property="Background" Value="#303030" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="contentBorder" Property="Background" Value="#606060" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>

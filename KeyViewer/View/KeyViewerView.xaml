@@ -12,6 +12,7 @@
     Width="{x:Static vm:SettingsClass.SizeX}"
     Height="{x:Static vm:SettingsClass.SizeY}"
     d:Height="{x:Static vm:SettingsClass.SizeY}"
+    d:Visibility="Visible"
     d:Width="{x:Static vm:SettingsClass.SizeX}"
     AllowsTransparency="True"
     Background="{x:Null}"
@@ -27,11 +28,6 @@
         <vm:KeyViewerViewModel />
     </Window.DataContext>
     <Window.Resources>
-        <conv:MarginConverter x:Key="marginConverter" />
-        <conv:IsFirstItem x:Key="isFirstItem" />
-        <conv:IsActiveChanged x:Key="isActiveChanged" />
-        <conv:MaxTextLenghtConverter x:Key="MaxTextLenght" />
-        <conv:VisibleConverter x:Key="visibleConverter" />
         <Style x:Key="textBlockStyle" TargetType="TextBlock">
             <Setter Property="Effect">
                 <Setter.Value>

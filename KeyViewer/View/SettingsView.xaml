@@ -1,0 +1,129 @@
+﻿<Window
+    x:Class="KeyViewer.View.SettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:conv="clr-namespace:KeyViewer.View.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:KeyViewer.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mp="clr-namespace:KeyViewer.Model.Programs"
+    xmlns:psv="clr-namespace:KeyViewer.View.Settings"
+    xmlns:settings="clr-namespace:KeyViewer.View.Settings"
+    xmlns:vm="clr-namespace:KeyViewer.ViewModel"
+    Title="ProgramSettings"
+    Width="800"
+    Height="450"
+    Background="#404040"
+    Closed="Window_Closed"
+    mc:Ignorable="d">
+    <Window.DataContext>
+        <vm:SettingsViewModel />
+    </Window.DataContext>
+    <TabControl Background="Transparent">
+        <TabItem Background="Transparent" Header="Programs">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel Background="Transparent">
+                    <Button
+                        Padding="4"
+                        BorderBrush="Black"
+                        Command="{Binding SelectDefautCommand}"
+                        Content="Defaut" />
+                    <TextBox Text="{Binding ProgramFilter, UpdateSourceTrigger=PropertyChanged}" />
+                    <ListView
+                        Grid.Row="1"
+                        HorizontalContentAlignment="Stretch"
+                        VerticalContentAlignment="Stretch"
+                        Background="#505050"
+                        ItemsSource="{Binding Settings}"
+                        ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                        SelectedItem="{Binding SelectedSettings, Mode=TwoWay}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate DataType="{x:Type mp:ProgramSettings}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding DisplayName, Converter={StaticResource maxTextLenght}, ConverterParameter='20'}" />
+                                    <TextBlock
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Right"
+                                        Text="{Binding InGameAllTime, Converter={StaticResource timeShortCutConverter}}">
+                                        <TextBlock.Visibility>
+                                            <MultiBinding Converter="{StaticResource equalsVisibleConverter}" ConverterParameter="true">
+                                                <Binding Path="DisplayName" />
+                                                <Binding Path="DataContext.SelectedSettings.DisplayName" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListView}" />
+                                            </MultiBinding>
+                                        </TextBlock.Visibility>
+                                    </TextBlock>
+                                    <StackPanel
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                        <Button
+                                            Margin="2,0"
+                                            Padding="0"
+                                            HorizontalContentAlignment="Center"
+                                            VerticalContentAlignment="Center"
+                                            Command="{Binding Path=DataContext.DeleteSettingsCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListView}}"
+                                            CommandParameter="{Binding}"
+                                            ToolTip="Delete">
+                                            <Button.Content>
+                                                <TextBlock
+                                                    Width="12"
+                                                    Height="12"
+                                                    Margin="0,-3,0,3"
+                                                    Padding="0"
+                                                    FontSize="12"
+                                                    Text="⨯"
+                                                    TextAlignment="Center" />
+                                            </Button.Content>
+                                        </Button>
+                                        <Button
+                                            Grid.Column="1"
+                                            Margin="0"
+                                            Padding="0"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            HorizontalContentAlignment="Center"
+                                            VerticalContentAlignment="Center"
+                                            Background="DarkRed"
+                                            Command="{Binding Path=DataContext.DeletePermanentlySettingsCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListView}}"
+                                            CommandParameter="{Binding}"
+                                            ToolTip="Delete Permanently (not add automatically)">
+                                            <Button.Content>
+                                                <TextBlock
+                                                    Width="12"
+                                                    Height="12"
+                                                    Margin="0,-3,0,3"
+                                                    Padding="0"
+                                                    FontSize="12"
+                                                    Text="⨯"
+                                                    TextAlignment="Center" />
+                                            </Button.Content>
+                                        </Button>
+                                        <StackPanel.Visibility>
+                                            <MultiBinding Converter="{StaticResource equalsVisibleConverter}" ConverterParameter="false">
+                                                <Binding Path="DisplayName" />
+                                                <Binding Path="DataContext.SelectedSettings.DisplayName" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=ListView}" />
+                                            </MultiBinding>
+                                        </StackPanel.Visibility>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </StackPanel>
+                <psv:ProgramSettingsView Grid.Column="1" DataContext="{Binding SelectedSettingsModel}" />
+            </Grid>
+        </TabItem>
+        <TabItem Background="Transparent" Header="Keys">
+            <settings:KeysEditorView />
+        </TabItem>
+    </TabControl>
+</Window>

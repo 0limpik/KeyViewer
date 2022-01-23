@@ -18,16 +18,23 @@ namespace EventHook
         public string Description { get; }
 
         /// <summary>
+        /// Отображать ли клавишу для редактирования
+        /// </summary>
+        public bool Diplay { get; }
+
+        /// <summary>
         /// Стандартный конструстор
         /// </summary>
         /// <param name="Name">Название</param>
         /// <param name="Description">Описание</param>
         public KeyAttribute(
             string Name,
-            string Description)
+            string Description,
+            bool Diplay = true)
         {
             this.Name = Name;
             this.Description = Description;
+            this.Diplay = Diplay;
         }
     }
 }

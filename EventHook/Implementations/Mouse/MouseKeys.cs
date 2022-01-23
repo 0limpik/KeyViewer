@@ -14,7 +14,7 @@
         [Key("WheelUp", "The mouse wheel  was scroll up")]
         MiddleUp = 4194302,
 
-        [Key("None", "No mouse button was pressed")]
+        [Key("None", "No mouse button was pressed", false)]
         None = 0,
 
         [Key("MouseRight", "The right mouse button was pressed")]

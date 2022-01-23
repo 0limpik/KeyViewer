@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Remoting.Messaging;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Interop;
@@ -17,13 +16,6 @@ namespace KeyViewer.View
         {
             InitializeComponent();
 
-            //this.Left = 300;
-            //this.Top = SystemParameters.PrimaryScreenHeight - this.Height;
-
-            var context = DataContext as KeyViewerViewModel;
-            //context.AddKey = (k) => KeyContainer.Items.Add(k);
-            //context.RemoveKey = (k) => KeyContainer.Items.Remove(k);
-
             timer = new DispatcherTimer
             {
                 Interval = TimeSpan.FromMilliseconds(1)
@@ -31,7 +23,7 @@ namespace KeyViewer.View
             timer.Tick += Update;
             //timer.Start();
 
-            var settings = new ProgramSettingsView();
+            var settings = new SettingsView();
             settings.Init(ViewModel);
             settings.Show();
         }

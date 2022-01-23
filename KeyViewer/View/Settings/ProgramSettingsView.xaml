@@ -1,0 +1,226 @@
+﻿<UserControl
+    x:Class="KeyViewer.View.Settings.ProgramSettingsView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:KeyViewer.View.Settings"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mp="clr-namespace:KeyViewer.Model.Programs"
+    xmlns:mv="clr-namespace:KeyViewer.ViewModel.Settings"
+    d:DesignHeight="450"
+    d:DesignWidth="600"
+    mc:Ignorable="d">
+    <d:UserControl.DataContext>
+        <mv:ProgramSettingsViewModel />
+    </d:UserControl.DataContext>
+    <Grid>
+        <StackPanel
+            Grid.Column="1"
+            d:Visibility="Visible"
+            Background="#202020"
+            Visibility="{Binding IsNotNull, Converter={StaticResource visibleConverter}}">
+            <Grid Margin="5,0,0,0" Background="#808080">
+                <TextBlock
+                    Grid.Column="0"
+                    Margin="5,0,0,3"
+                    d:Text="ChromeChromeChromeChromeChromeChromeChromeChromeChromeChromeChromeChrome"
+                    FontSize="20"
+                    Text="{Binding SelectedSettings.DisplayName}" />
+                <StackPanel
+                    Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    Background="#808080"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        Grid.Column="1"
+                        Margin="5,0,0,0"
+                        VerticalAlignment="Center"
+                        FontSize="14"
+                        Text="Visible" />
+                    <CheckBox
+                        Margin="5,2"
+                        VerticalAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Center"
+                        d:IsChecked="True"
+                        IsChecked="{Binding SelectedSettings.IsVisible}" />
+                    <ComboBox
+                        Width="150"
+                        VerticalAlignment="Center"
+                        ItemsSource="{Binding ReportTemplateValues}"
+                        SelectedItem="{Binding DisplayNameSource}">
+                        <ComboBox.Resources>
+                            <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="Black" />
+                            </Style>
+                        </ComboBox.Resources>
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource enumDescriptionConverter}}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+            <ListView Margin="5,0,0,0" Background="Transparent">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="BorderBrush" Value="Transparent" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                    <Border
+                                        Name="Border"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}">
+                                        <ContentPresenter
+                                            Margin="{TemplateBinding Padding}"
+                                            Content="{TemplateBinding Content}"
+                                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListViewItem>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Margin="0,0,5,0" Text="Location:" />
+                        <TextBlock d:Text="C:\Users\Olimpik\source\repos\TSHelper\UI.WPF\ViewModels" Text="{Binding SelectedSettings.Window.FilePath}" />
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="StartTime " />
+                        <TextBlock
+                            d:Text="0:0:0"
+                            Text="{Binding SelectedSettings.Window.StartTime, Converter={StaticResource timeToNowCutConverter}}"
+                            ToolTip="{Binding SelectedSettings.Window.StartTime}" />
+                        <TextBlock Text=" ago" />
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem>
+                    <StackPanel Orientation="Horizontal">
+                        <Grid
+                            Margin="-2"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center">
+                            <Grid.Resources>
+                                <Style BasedOn="{StaticResource DefButton}" TargetType="Button" />
+                            </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Button
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Command="{Binding SelectAlightCommand}"
+                                CommandParameter="{x:Static mp:Alighument.LeftTop}"
+                                Content="Left - Top" />
+                            <Button
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Command="{Binding SelectAlightCommand}"
+                                CommandParameter="{x:Static mp:Alighument.LeftBottom}"
+                                Content="Left - Bottom" />
+                            <Button
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Command="{Binding SelectAlightCommand}"
+                                CommandParameter="{x:Static mp:Alighument.RightTop}"
+                                Content="Right - Top" />
+                            <Button
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Command="{Binding SelectAlightCommand}"
+                                CommandParameter="{x:Static mp:Alighument.RightBottom}"
+                                Content="Right - Bottom" />
+                        </Grid>
+                        <Grid>
+                            <Grid.Resources>
+                                <Style BasedOn="{StaticResource DefTextBlock}" TargetType="TextBlock">
+                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                    <Setter Property="FontSize" Value="12" />
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="5,0,5,0"
+                                VerticalAlignment="Center"
+                                Text="Horizontal" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Margin="5,0,5,0"
+                                VerticalAlignment="Center"
+                                Text="Vertical" />
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Width="30"
+                                VerticalAlignment="Center"
+                                Text="{Binding SelectedSettings.AlightPosition.X, Mode=TwoWay}"
+                                TextAlignment="Right" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Width="30"
+                                VerticalAlignment="Center"
+                                Text="{Binding SelectedSettings.AlightPosition.Y, Mode=TwoWay}"
+                                TextAlignment="Right" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="2"
+                                VerticalAlignment="Center"
+                                Text="/" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="2"
+                                VerticalAlignment="Center"
+                                Text="/" />
+                            <TextBlock
+                                Grid.Row="0"
+                                Grid.Column="3"
+                                VerticalAlignment="Center"
+                                Text="{Binding MaxAlightHorizontal}" />
+                            <TextBlock
+                                Grid.Row="1"
+                                Grid.Column="3"
+                                VerticalAlignment="Center"
+                                Text="{Binding MaxAlightVertical}" />
+                        </Grid>
+                    </StackPanel>
+                </ListViewItem>
+                <ListViewItem>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="InGameAllTime " />
+                        <TextBlock
+                            d:Text="0:0:0"
+                            Text="{Binding SelectedSettings.InGameAllTime, Converter={StaticResource timeCutConverter}}"
+                            ToolTip="{Binding SelectedSettings.InGameAllTime}" />
+                        <TextBlock Margin="0,0,5,0" Text=" total" />
+                    </StackPanel>
+                </ListViewItem>
+            </ListView>
+        </StackPanel>
+    </Grid>
+</UserControl>

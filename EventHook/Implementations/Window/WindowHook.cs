@@ -41,6 +41,10 @@ namespace EventHook.Implementations.Window
         private void WinEventProc(IntPtr hWinEventHook, uint eventType, IntPtr hwnd, int idObject, int idChild, uint dwEventThread, uint dwmsEventTime) //STATIC
         {
             var windowParameters = CreateWindowParemeters(hwnd);
+
+            if (windowParameters.FilePath == @"C:\Windows\Explorer.EXE")
+                return;
+
             Changed?.Invoke(this,windowParameters);
         }
 

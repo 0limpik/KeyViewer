@@ -57,13 +57,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Extensions\GradientStopCollectionExtensions.cs" />
     <Compile Include="Extensions\KeysEnumExtensions.cs" />
     <Compile Include="Model\Programs\ProgramSettings.cs" />
+    <Compile Include="Services\DeletedProgramsRepository.cs" />
     <Compile Include="ViewModel\Keys\KeyItem.cs" />
     <Compile Include="ViewModel\Keys\KeyListViewModel.cs" />
-    <Compile Include="ViewModel\ProgramViewModel.cs" />
+    <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\SettingsClass.cs" />
+    <Compile Include="ViewModel\Settings\KeysEditorViewModel.cs" />
+    <Compile Include="ViewModel\Settings\ProgramSettingsViewModel.cs" />
     <Compile Include="View\Converters\BaseTypeConverters.cs" />
     <Compile Include="View\Converters\KeysConverters.cs" />
     <Compile Include="View\Converters\TimeConverters.cs" />
@@ -71,7 +75,13 @@
     <Compile Include="View\Keys\KeyListView.xaml.cs">
       <DependentUpon>KeyListView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ProgramSettingsView.xaml.cs">
+    <Compile Include="View\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Settings\KeysEditorView.xaml.cs">
+      <DependentUpon>KeysEditorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Settings\ProgramSettingsView.xaml.cs">
       <DependentUpon>ProgramSettingsView.xaml</DependentUpon>
     </Compile>
     <Page Include="View\Keys\KeyListView.xaml">
@@ -95,7 +105,15 @@
       <DependentUpon>KeyViewerView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\ProgramSettingsView.xaml">
+    <Page Include="View\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Settings\KeysEditorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Settings\ProgramSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

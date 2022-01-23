@@ -9,25 +9,25 @@
         [Key("Modifiers", "The bitmask to extract modifiers from a key value.")]
         Modifiers = -65536,
 
-        [Key("None", "No key pressed.")]
+        [Key("None", "No key pressed.", false)]
         None = 0,
 
-        [Key("LButton", "The left mouse button.")]
+        [Key("LButton", "The left mouse button.", false)]
         LButton = 1,
 
-        [Key("RButton", "The right mouse button.")]
+        [Key("RButton", "The right mouse button.", false)]
         RButton = 2,
 
         [Key("Cancel", "The CANCEL key.")]
         Cancel = 3,
 
-        [Key("MButton", "The middle mouse button (three-button mouse).")]
+        [Key("MButton", "The middle mouse button (three-button mouse).", false)]
         MButton = 4,
 
-        [Key("XButton1", "The first x mouse button (five-button mouse).")]
+        [Key("XButton1", "The first x mouse button (five-button mouse).", false)]
         XButton1 = 5,
 
-        [Key("XButton2", "The second x mouse button (five-button mouse).")]
+        [Key("XButton2", "The second x mouse button (five-button mouse).", false)]
         XButton2 = 6,
 
         [Key("Back", "The BACKSPACE key.")]
